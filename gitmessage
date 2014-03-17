@@ -1,0 +1,10 @@
+# Subject
+# ISSUE #234: Clearly explain in one line what the commit is about
+
+# Body
+# Describe the problem the commit solves.
+# Wrap it to 72 characters
+#
+# + Why is this change necessary?
+# + How does this change address the issue?
+# + What side effects does this change have?

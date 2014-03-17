@@ -1,0 +1,20 @@
+#
+# This file holds only global ignored files or patterns
+#
+# A collection from github which has templates according to a specific
+# project type, can be found at:
+# https://github.com/github/gitignore
+# and should be included in the project directory.
+#
+
+## Logs and backup
+
+*.log
+*~
+*.bak
+
+
+## Netbeans workspace
+
+/nbproject/
+

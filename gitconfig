@@ -1,0 +1,108 @@
+[user]
+    name  = 
+    email = 
+
+[core]
+    # Using vim.tiny as editor
+    editor                  = vim.tiny
+    filemode                = false
+    logallrefupdates        = true
+    whitespace              = tab-in-indent
+    excludesfile            = ~/.gitignore
+
+[gc]
+  auto=1
+
+[alias]
+    br    = branch -v
+    re    = remote -v
+    tg    = tag -l
+    ci    = commit
+    co    = checkout
+    nb    = checkout -b
+    dc    = diff --cached --histogram
+    ds    = diff --staged --histogram
+    df    = diff --histogram
+    dfw   = diff --word-diff
+    st    = status -sb
+    w     = whatchanged
+    wdiff = diff --word-diff=plain
+    y     = diff "@{yesterday}"
+    k     = !gitk
+    ka    = !gitk --all
+    cp    = cherry-pick -x
+
+    mff   = merge --ff-only
+    mrp   = merge --strategy-option=patience
+    plr   = pull --rebase
+
+    # http://blog.apiaxle.com/post/handy-git-tips-to-stop-you-getting-fired/#use_snapshot_stashes
+    snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}"
+
+    # Formating http://git-scm.com/docs/git-log
+    lg     = log -p
+    lol    = log --graph --decorate --date=relative --oneline
+    lola   = log --graph --decorate --date=relative --oneline --all
+    lolc   = log --graph --color --pretty=format:'%Cred%h%Creset - %C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+    lolac  = log --graph --color --pretty=format:'%Cred%h%Creset - %C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all
+
+    log-fancy = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(cyan)<%an>%Creset' --date=relative
+
+    log-me      = log --date=short --pretty=format:'%h %cd %s' --author=neto
+
+    ls          = ls-files
+
+    # Show files ignored by git:
+    ign         = ls-files -o -i --exclude-standard
+
+    # Ignoring files, undoing and listing
+    ignored     = !git ls-files -v | grep "^[[:lower:]]"
+    ignore      = !git update-index --assume-unchanged 
+    unignore    = !git update-index --no-assume-unchanged
+
+    amend       = commit --amend -a
+    fetchall    = fetch -v --all
+    panic       = !tar cvf ../git_panic.tar *
+
+    unstage     = reset HEAD
+    uncommit    = reset --soft HEAD^
+
+[color]
+    ui = auto
+    interactive = auto
+
+[color "branch"]
+    current     = yellow reverse
+    local       = yellow
+    remote      = green
+
+[color "diff"]
+    meta        = yellow bold
+    frag        = magenta bold
+    old         = red bold
+    new         = green bold
+
+[color "status"]
+    added       = yellow
+    changed     = green
+    untracked   = cyan
+
+[merge]
+    tool = meld
+    summary=true
+
+[diff]
+    tool        = meld
+
+[difftool]
+    prompt      = false
+
+[mergetool]
+    prompt      = false
+    keepBackup  = false
+
+[commit]
+    template    = ~/.gitmessage
+
+[gui]
+    commitmsgwidth = 80
