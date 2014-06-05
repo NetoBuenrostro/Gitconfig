@@ -3,15 +3,16 @@
     email = 
 
 [core]
-    # Using vim.tiny as editor
-    editor                  = vim.tiny
-    filemode                = false
-    logallrefupdates        = true
-    whitespace              = tab-in-indent
-    excludesfile            = ~/.gitignore
+    editor           = vim
+    filemode         = false
+    bare             = false
+    logallrefupdates = true
+    whitespace       = tab-in-indent, trailing-space
+    excludesfile     = ~/.gitignore
+    autocrlf         = input
 
 [gc]
-  auto=1
+  auto    = 1
 
 [alias]
     br    = branch -v
@@ -20,17 +21,32 @@
     ci    = commit
     co    = checkout
     nb    = checkout -b
+
+    # Diff commands
+    dfchk = diff --check        # Check for errors (space, tab ... )
     dc    = diff --cached --histogram
     ds    = diff --staged --histogram
     df    = diff --histogram
     dfw   = diff --word-diff
-    st    = status -sb
+    dfnp  = !git --no-pager diff
+    dftool= difftool
+    dfp4  = difftool --tool=p4merge
+    dfvim = difftool --tool=vimdiff
     w     = whatchanged
     wdiff = diff --word-diff=plain
     y     = diff "@{yesterday}"
+    st    = status -sb
+
+    # Runing gitk with git
     k     = !gitk
     ka    = !gitk --all
+    kme   = !gitk --all --author=`git config user.email`
+
     cp    = cherry-pick -x
+
+    # Remove remote branch if git is older than 1.7.0 we can do `git push origin :<branchName>`
+    #rmr  = "!f() { git push origin :$1; }; f"
+    rmbranch = push origin --delete
 
     mff   = merge --ff-only
     mrp   = merge --strategy-option=patience
@@ -39,36 +55,65 @@
     # http://blog.apiaxle.com/post/handy-git-tips-to-stop-you-getting-fired/#use_snapshot_stashes
     snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}"
 
+    # Log commands
     # Formating http://git-scm.com/docs/git-log
-    lg     = log -p
-    lol    = log --graph --decorate --date=relative --oneline
-    lola   = log --graph --decorate --date=relative --oneline --all
-    lolc   = log --graph --color --pretty=format:'%Cred%h%Creset - %C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
-    lolac  = log --graph --color --pretty=format:'%Cred%h%Creset - %C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all
+    lo    = log -p
+    lol   = log --graph --decorate --date=relative --oneline
+    lola  = log --graph --decorate --date=relative --oneline --all
+    lolc  = log --graph --color --pretty=format:'%C(yellow)%t%Creset - %C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+    lolac = log --graph --color --pretty=format:'%C(yellow)%t%Creset - %C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all
+    lolf  = log --graph         --pretty=format:'%C(yellow)%t%Creset - %C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --date=relative
 
-    log-fancy = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(cyan)<%an>%Creset' --date=relative
+    # Show my commits only
+    log-me      = !git config user.email | xargs -I{} git lolc --author={}
 
-    log-me      = log --date=short --pretty=format:'%h %cd %s' --author=neto
-
+    # Show information about files in the index
     ls          = ls-files
 
+    # Ignoring files
+    # ==============
     # Show files ignored by git:
     ign         = ls-files -o -i --exclude-standard
 
     # Ignoring files, undoing and listing
     ignored     = !git ls-files -v | grep "^[[:lower:]]"
-    ignore      = !git update-index --assume-unchanged 
+
+    # Ignore changes in a file, if a remote commit has changed the file
+    # it will overwrite the file without raise a warning
+    # -- Those are not in .gitignore
+    ignore      = !git update-index --assume-unchanged
+
+    # Stop ignoring changes in a file
     unignore    = !git update-index --no-assume-unchanged
 
-    amend       = commit --amend -a
+    # Amending the previous commit
+    # ============================
+    # Amend the previous commit adding the files from index/cached to the previous commit
+    amend       = commit --amend
+    # Add the files from the index/cached to the previous commit without changing our message
+    amendfile   = commit --amend --no-edit
+    # add all the files in our work directory except the new ones to the previous commit
+    amendall    = commit --amend --all
+
+    # Get all the changes from the server but no merge any of the branches
     fetchall    = fetch -v --all
+
+    # Pack the repository and run
     panic       = !tar cvf ../git_panic.tar *
 
+    # Remove the staged changes (This is opposite to git add)
     unstage     = reset HEAD
+
+    # Remove the last commit but keep the changes in the working directory
     uncommit    = reset --soft HEAD^
 
+    # Tools
+    killspace    = !git stripspace <
+    killcomments = !git stripspace --strip-comments <
+    killcomments = !git stripspace --comment-lines <
+
 [color]
-    ui = auto
+    ui          = auto
     interactive = auto
 
 [color "branch"]
@@ -88,8 +133,8 @@
     untracked   = cyan
 
 [merge]
-    tool = meld
-    summary=true
+    tool        = meld
+    summary     = true
 
 [diff]
     tool        = meld
@@ -105,4 +150,13 @@
     template    = ~/.gitmessage
 
 [gui]
-    commitmsgwidth = 80
+    commitmsgwidth = 72
+
+[difftool "vimdiff"]
+    cmd = vimdiff $LOCAL $REMOTE
+
+# Using p4merge, because it let us diff images
+# to call it we have to use git dfp4
+[difftool "p4merge"]
+    # test expansion
+    cmd = ~/workspace/apps/p4v/bin/p4merge $LOCAL $REMOTE
