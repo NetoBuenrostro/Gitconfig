@@ -160,3 +160,7 @@
 [difftool "p4merge"]
     # test expansion
     cmd = ~/workspace/apps/p4v/bin/p4merge $LOCAL $REMOTE
+
+# Allowing to just do `git push` to push the current branch to the configured upstream
+[push]
+    default = upstream
