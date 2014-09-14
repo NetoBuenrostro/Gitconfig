@@ -24,12 +24,8 @@
 
 
 [alias]
-    br    = branch -v
-    re    = remote -v
     tg    = tag -l
     ci    = commit
-    co    = checkout
-    nb    = checkout -b
 
 
 
@@ -60,7 +56,16 @@
 
     cp    = cherry-pick -x
 
-
+    # Branching
+    # ==================================================================
+    co    = checkout # git co <branch>
+    # Create a new branch and switch to it ex.: git nb <branch>
+    # Create a new branch based on other and switch to it ex.: git nb <branch> <based branch>
+    nb    = checkout -b
+    # Get information from the local branches
+    br    = branch -v
+    # Get information from the remote branches
+    re    = remote -v
 
     # Remove remote branch if git is older than 1.7.0 we can do `git push origin :<branchName>`
     #rmr  = "!f() { git push origin :$1; }; f"
