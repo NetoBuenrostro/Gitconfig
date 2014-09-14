@@ -18,6 +18,9 @@
 
 
 
+[push]
+    default = simple
+
 [gc]
   auto    = 1
 
