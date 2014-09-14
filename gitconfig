@@ -80,7 +80,7 @@
     snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}"
 
     # Log commands
-    # ============
+    # ==================================================================
     # Formating http://git-scm.com/docs/git-log
     lg    = log -p
     lol   = log --graph --decorate --date=relative --oneline
@@ -108,7 +108,7 @@
 
 
     # Ignoring files
-    # ==============
+    # ==================================================================
     ## Show files ignored by git:
     ign         = ls-files -o -i --exclude-standard
 
@@ -126,14 +126,13 @@
 
 
     # Amending the previous commit
-    # ============================
+    # ==================================================================
     ## Amend the previous commit adding the files from index/cached to the previous commit
     amend     = commit --amend
     ## Add the files from the index/cached to the previous commit without changing our message
     amendfile = commit --amend --no-edit
     ## add all the files in our work directory except the new ones to the previous commit
     amendall  = commit --amend --all
-
 
 
     # Fetch commands
@@ -157,14 +156,14 @@
     uncommit = reset --soft HEAD^
 
 
-
     # Tools
-    # =====
-    killspace     = !git stripspace <
-    killcomments  = !git stripspace --strip-comments <
-    killcomments  = !git stripspace --comment-lines <
+    # ==================================================================
+    killspace    = !git stripspace <
+    killcomments = !git stripspace --strip-comments <
+    killcomments = !git stripspace --comment-lines <
 
-
+    # Pack the repository and run, this can be used even on a not git repository
+    panic       = !tar cvf ../git_panic.tar *
 
 [color]
     ui          = auto
