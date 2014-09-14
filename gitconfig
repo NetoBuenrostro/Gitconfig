@@ -27,19 +27,18 @@
     tg    = tag -l
     ci    = commit
 
-
-
     # Diff commands
     # =============
-    dfchk = diff --check        # Check for errors (space, tab ... )
+    dfchk = diff --check        # Check for errors combined with core.whitespace (space, tab ... )
     dc    = diff --cached --histogram
     ds    = diff --staged --histogram
     df    = diff --histogram
     dfw   = diff --word-diff
     dfnp  = !git --no-pager diff
-    dftool= difftool
-    dfp4  = difftool --tool=p4merge
-    dfvim = difftool --tool=vimdiff
+    # Using external tools
+    dftool= difftool # Default tool
+    dfp4  = difftool --tool=p4merge # launch diff with p4merge
+    dfvim = difftool --tool=vimdiff # launch diff with vimdiff
     w     = whatchanged
     wdiff = diff --word-diff=plain
     y     = diff "@{yesterday}"
