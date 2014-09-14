@@ -70,8 +70,6 @@
     #rmr  = "!f() { git push origin :$1; }; f"
     rmrbranch = push origin --delete
 
-
-
     mff   = merge --ff-only
     mrp   = merge --strategy-option=patience
     plr   = pull --rebase
