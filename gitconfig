@@ -2,6 +2,8 @@
     name  = 
     email = 
 
+
+
 [core]
     editor           = vim
     filemode         = false
@@ -9,10 +11,17 @@
     logallrefupdates = true
     whitespace       = tab-in-indent, trailing-space
     excludesfile     = ~/.gitignore
+    # autocrlf [false, input, true]
     autocrlf         = input
+    #  lf, crlf and native
+    # eol              = native
+
+
 
 [gc]
   auto    = 1
+
+
 
 [alias]
     br    = branch -v
@@ -21,6 +30,8 @@
     ci    = commit
     co    = checkout
     nb    = checkout -b
+
+
 
     # Diff commands
     dfchk = diff --check        # Check for errors (space, tab ... )
@@ -37,23 +48,35 @@
     y     = diff "@{yesterday}"
     st    = status -sb
 
+
+
     # Runing gitk with git
     k     = !gitk
     ka    = !gitk --all
     kme   = !gitk --all --author=`git config user.email`
 
+
+
     cp    = cherry-pick -x
+
+
 
     # Remove remote branch if git is older than 1.7.0 we can do `git push origin :<branchName>`
     #rmr  = "!f() { git push origin :$1; }; f"
     rmbranch = push origin --delete
 
+
+
     mff   = merge --ff-only
     mrp   = merge --strategy-option=patience
     plr   = pull --rebase
 
+
+
     # http://blog.apiaxle.com/post/handy-git-tips-to-stop-you-getting-fired/#use_snapshot_stashes
     snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}"
+
+
 
     # Log commands
     # Formating http://git-scm.com/docs/git-log
