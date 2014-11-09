@@ -63,7 +63,7 @@
 
     # Remove remote branch if git is older than 1.7.0 we can do `git push origin :<branchName>`
     #rmr  = "!f() { git push origin :$1; }; f"
-    rmbranch = push origin --delete
+    rmrbranch = push origin --delete
 
 
 
@@ -83,9 +83,11 @@
     lo    = log -p
     lol   = log --graph --decorate --date=relative --oneline
     lola  = log --graph --decorate --date=relative --oneline --all
-    lolc  = log --graph --color --pretty=format:'%C(yellow)%t%Creset - %C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
-    lolac = log --graph --color --pretty=format:'%C(yellow)%t%Creset - %C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all
-    lolf  = log --graph         --pretty=format:'%C(yellow)%t%Creset - %C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --date=relative
+    lolc  = log --graph --color --pretty=format:'%C(yellow)%t%Creset - %d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+    lolac = log --graph --color --pretty=format:'%C(yellow)%t%Creset - %d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all
+    lolf  = log --graph         --pretty=format:'%C(yellow)%t%Creset - %d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --date=relative
+    lbrl  = !git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
+    lbra  = !git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)'
 
     # Show my commits only
     log-me      = !git config user.email | xargs -I{} git lolc --author={}
@@ -93,47 +95,63 @@
     # Show information about files in the index
     ls          = ls-files
 
+
+
     # Ignoring files
     # ==============
-    # Show files ignored by git:
+    ## Show files ignored by git:
     ign         = ls-files -o -i --exclude-standard
 
-    # Ignoring files, undoing and listing
+    ## Ignoring files, undoing and listing
     ignored     = !git ls-files -v | grep "^[[:lower:]]"
 
     # Ignore changes in a file, if a remote commit has changed the file
     # it will overwrite the file without raise a warning
     # -- Those are not in .gitignore
-    ignore      = !git update-index --assume-unchanged
+    ignore      = update-index --assume-unchanged
 
     # Stop ignoring changes in a file
-    unignore    = !git update-index --no-assume-unchanged
+    unignore    = update-index --no-assume-unchanged
+
+
 
     # Amending the previous commit
     # ============================
-    # Amend the previous commit adding the files from index/cached to the previous commit
-    amend       = commit --amend
-    # Add the files from the index/cached to the previous commit without changing our message
-    amendfile   = commit --amend --no-edit
-    # add all the files in our work directory except the new ones to the previous commit
-    amendall    = commit --amend --all
+    ## Amend the previous commit adding the files from index/cached to the previous commit
+    amend     = commit --amend
+    ## Add the files from the index/cached to the previous commit without changing our message
+    amendfile = commit --amend --no-edit
+    ## add all the files in our work directory except the new ones to the previous commit
+    amendall  = commit --amend --all
 
+
+
+    # Fetch commands
     # Get all the changes from the server but no merge any of the branches
-    fetchall    = fetch -v --all
+    fetchall = fetch --all
+
+
 
     # Pack the repository and run
-    panic       = !tar cvf ../git_panic.tar *
+    panic = !tar cvf ../git_panic.tar *
 
-    # Remove the staged changes (This is opposite to git add)
-    unstage     = reset HEAD
 
-    # Remove the last commit but keep the changes in the working directory
-    uncommit    = reset --soft HEAD^
+
+    # Undo commands
+    ## Remove the staged changes (This is opposite to git add)
+    unstage  = reset HEAD
+
+    ## Remove the last commit but keep the changes in the working directory
+    uncommit = reset --soft HEAD^
+
+
 
     # Tools
-    killspace    = !git stripspace <
-    killcomments = !git stripspace --strip-comments <
-    killcomments = !git stripspace --comment-lines <
+    killspace     = !git stripspace <
+    killcomments  = !git stripspace --strip-comments <
+    killcomments  = !git stripspace --comment-lines <
+
+
 
 [color]
     ui          = auto
