@@ -1,5 +1,5 @@
-# Title
-# ISSUE #234: Clearly explain in one line what the commit is about < 50c
+# Subject
+# ISSUE #234: Clearly explain in one line what the commit is about,  less than 50 
 
 # Body
 # Describe the problem the commit solves.
@@ -8,5 +8,7 @@
 # + Why is this change necessary?
 # + How does this change address the issue?
 # + What side effects does this change have?
+# + What and why code got removed, this is good so we can search
+#   back to restore functionality
 # More?
 # http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
