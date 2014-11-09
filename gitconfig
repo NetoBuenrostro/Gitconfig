@@ -89,6 +89,14 @@
     lbrl  = !git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
     lbra  = !git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)'
 
+    # List branches tracking remote branches
+    br-tracking     = "!git for-each-ref --format='%(refname:short)' refs/heads/* | while read LOCALBRANCH; do if ORIGIN=$(git config --get branch.$LOCALBRANCH.remote); then REMOTEBRANCH=$(git config --get branch.$LOCALBRANCH.merge); echo \"$LOCALBRANCH  ->  $ORIGIN/${REMOTEBRANCH##*/}\"; fi; done"
+    # List branches not tracking remote branches
+    br-no-tracking  = "!git for-each-ref --format='%(refname:short)' refs/heads/* | while read LOCALBRANCH; do if ! [ $(git config --get branch.$LOCALBRANCH.remote) ]; then echo \"$LOCALBRANCH\"; fi; done"
+    # Interactively removes local branches that are not tracking remote branch
+    prune-me = "!git br-no-tracking | while read -r LINE; do printf \"\nDo you want to prune %s? [y/n]\n\" \"$LINE\"; read CONFIRM </dev/tty; case "$CONFIRM" in [yY]) printf \"\nPruning '%s' from local repository ...\n\" \"$LINE\"; git branch -D \"$LINE\";; *) printf \"Skiping %s \n\n\" \"$LINE\";; esac done;"
+
+
     # Show my commits only
     log-me      = !git config user.email | xargs -I{} git lolc --author={}
 
