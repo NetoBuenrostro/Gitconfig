@@ -34,6 +34,7 @@
 
 
     # Diff commands
+    # =============
     dfchk = diff --check        # Check for errors (space, tab ... )
     dc    = diff --cached --histogram
     ds    = diff --staged --histogram
@@ -76,11 +77,10 @@
     # http://blog.apiaxle.com/post/handy-git-tips-to-stop-you-getting-fired/#use_snapshot_stashes
     snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}"
 
-
-
     # Log commands
+    # ============
     # Formating http://git-scm.com/docs/git-log
-    lo    = log -p
+    lg    = log -p
     lol   = log --graph --decorate --date=relative --oneline
     lola  = log --graph --decorate --date=relative --oneline --all
     lolc  = log --graph --color --pretty=format:'%C(yellow)%t%Creset - %d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
@@ -115,7 +115,7 @@
 
     # Ignore changes in a file, if a remote commit has changed the file
     # it will overwrite the file without raise a warning
-    # -- Those are not in .gitignore
+    # Those are not stored in .gitignore
     ignore      = update-index --assume-unchanged
 
     # Stop ignoring changes in a file
@@ -135,6 +135,7 @@
 
 
     # Fetch commands
+    # ==============
     # Get all the changes from the server but no merge any of the branches
     fetchall = fetch --all
 
@@ -146,6 +147,7 @@
 
 
     # Undo commands
+    # =============
     ## Remove the staged changes (This is opposite to git add)
     unstage  = reset HEAD
 
@@ -155,6 +157,7 @@
 
 
     # Tools
+    # =====
     killspace     = !git stripspace <
     killcomments  = !git stripspace --strip-comments <
     killcomments  = !git stripspace --comment-lines <
@@ -187,6 +190,7 @@
 
 [diff]
     tool        = meld
+    algorithm   = patience
 
 [difftool]
     prompt      = false
