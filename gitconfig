@@ -191,6 +191,9 @@
             fi \
         }; f"
 
+    # checkout for a branch with a specific identifier
+    #cobr = "!_f(){ BRANCH=\"$(git brsearch \"$1\")\" || { echo \"$BRANCH\"; exit 1;}; git co \"$BRANCH\"; }; _f"
+
     # Merge aliases
     # =============
     mff   = merge --ff-only
