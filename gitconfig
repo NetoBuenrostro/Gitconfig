@@ -92,6 +92,8 @@
 
     # http://blog.apiaxle.com/post/handy-git-tips-to-stop-you-getting-fired/#use_snapshot_stashes
     snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}"
+    # http://stackoverflow.com/questions/1360712/git-stash-cannot-apply-to-a-dirty-working-tree-please-stage-your-changes#answer-3733698
+    unstash  = !git stash show -p | git apply -3 && git stash drop
 
     # Log commands
     # ==================================================================
@@ -104,6 +106,7 @@
     lolf  = log --graph         --pretty=format:'%C(yellow)%t%Creset - %d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --date=relative
     lbrl  = !git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
     lbra  = !git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)'
+
 
     # List branches tracking remote branches
     br-tracking     = "!git for-each-ref --format='%(refname:short)' refs/heads/* | while read LOCALBRANCH; do if ORIGIN=$(git config --get branch.$LOCALBRANCH.remote); then REMOTEBRANCH=$(git config --get branch.$LOCALBRANCH.merge); echo \"$LOCALBRANCH  ->  $ORIGIN/${REMOTEBRANCH##*/}\"; fi; done"
