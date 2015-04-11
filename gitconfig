@@ -69,10 +69,15 @@
     # Get information from the remote branches
     re    = remote -v
 
+    # Branch commands
+    # ===============
     # Remove remote branch if git is older than 1.7.0 we can do `git push origin :<branchName>`
     #rmr  = "!f() { git push origin :$1; }; f"
     rmrbranch = push origin --delete
 
+
+    # Merge aliases
+    # =============
     mff   = merge --ff-only
     mrp   = merge --strategy-option=patience
     plr   = pull --rebase
