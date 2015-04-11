@@ -75,6 +75,9 @@
     #rmr  = "!f() { git push origin :$1; }; f"
     rmrbranch = push origin --delete
 
+    # Search for any branch which include the word
+    brsearch    = "!_f() { BRANCH=$(git branch | grep $1 | cut -c3-); if [ $(printf \"$BRANCH\" | wc -m) -gt 0 -a $(echo \"$BRANCH\" | wc -l) -eq 1 ]; then echo \"$BRANCH\"; else echo \"The branch name should be unique and exist locally\";exit 1; fi; }; _f"
+    brsearchall = "!_f() { BRANCH=$(git branch -a | grep $1 | cut -c3-); if [ $(printf \"$BRANCH\" | wc -m) -gt 0 -a $(echo \"$BRANCH\" | wc -l) -eq 1 ]; then echo \"$BRANCH\"; else echo \"The branch name should be unique and exist locally\";exit 1; fi; }; _f"
 
     # Merge aliases
     # =============
