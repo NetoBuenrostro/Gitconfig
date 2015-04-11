@@ -119,7 +119,13 @@
     # Show information about files in the index
     ls          = ls-files
 
+    # Shows the commits comming from the remote before merging them into our branch
+    incomming   = "!git remote update -p; git log ..@{u}"
+    # See them as a patch
+    incomming-p = "!git remote update -p; git log ..@{u} -p"
 
+    # Show what we will be pushing to the remote branch
+    outgoing    = log @{u}..
 
     # Ignoring files
     # ==================================================================
