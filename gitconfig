@@ -79,6 +79,9 @@
     brsearch    = "!_f() { BRANCH=$(git branch | grep $1 | cut -c3-); if [ $(printf \"$BRANCH\" | wc -m) -gt 0 -a $(echo \"$BRANCH\" | wc -l) -eq 1 ]; then echo \"$BRANCH\"; else echo \"The branch name should be unique and exist locally\";exit 1; fi; }; _f"
     brsearchall = "!_f() { BRANCH=$(git branch -a | grep $1 | cut -c3-); if [ $(printf \"$BRANCH\" | wc -m) -gt 0 -a $(echo \"$BRANCH\" | wc -l) -eq 1 ]; then echo \"$BRANCH\"; else echo \"The branch name should be unique and exist locally\";exit 1; fi; }; _f"
 
+    # checkout for a branch with a specific identifier
+    cobr = "!_f(){ BRANCH=\"$(git brsearch \"$1\")\" || { echo \"$BRANCH\"; exit 1;}; git co \"$BRANCH\"; }; _f"
+
     # Merge aliases
     # =============
     mff   = merge --ff-only
