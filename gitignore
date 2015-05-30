@@ -8,13 +8,13 @@
 #
 
 ## Logs and backup
-
 *.log
 *~
 *.bak
 
 
-## Netbeans workspace
-
+## IDE & editors projectfiles
+# Netbeans
 /nbproject/
-
+# Sublimetext
+.sublime-project
