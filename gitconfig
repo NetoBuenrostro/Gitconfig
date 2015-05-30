@@ -164,12 +164,6 @@
     fetchall = fetch --all
 
 
-
-    # Pack the repository and run
-    panic = !tar cvf ../git_panic.tar *
-
-
-
     # Undo commands
     # =============
     ## Remove the staged changes (This is opposite to git add)
@@ -185,8 +179,12 @@
     killcomments = !git stripspace --strip-comments <
     killcomments = !git stripspace --comment-lines <
 
+    # Utils
+    # ==================================================================
     # Pack the repository and run, this can be used even on a not git repository
     panic       = !tar cvf ../git_panic.tar *
+    # Get the repository size
+    repo-size   = !git count-objects -v -H | grep -P -o '(?<=size: ).*'
 
 [color]
     ui          = auto
