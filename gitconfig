@@ -76,11 +76,60 @@
     rmrbranch = push origin --delete
 
     # Search for any branch which include the word
-    brsearch    = "!_f() { BRANCH=$(git branch | grep $1 | cut -c3-); if [ $(printf \"$BRANCH\" | wc -m) -gt 0 -a $(echo \"$BRANCH\" | wc -l) -eq 1 ]; then echo \"$BRANCH\"; else echo \"The branch name should be unique and exist locally\";exit 1; fi; }; _f"
-    brsearchall = "!_f() { BRANCH=$(git branch -a | grep $1 | cut -c3-); if [ $(printf \"$BRANCH\" | wc -m) -gt 0 -a $(echo \"$BRANCH\" | wc -l) -eq 1 ]; then echo \"$BRANCH\"; else echo \"The branch name should be unique and exist locally\";exit 1; fi; }; _f"
+    get-branch = "! \
+        set -e; \
+        set -u; \
+        f() { \
+            result=\"$( git branch | grep \"$1\" | cut -c3-)\"; \
+            if [ $( printf \"${result}\" | wc -m ) -eq 0 ]; then \
+                exit 1; \
+            else \
+                printf \"${result}\\n\"; \
+            fi \
+        }; f"
+    brsearchall = "! \
+        set -e; \
+        set -u; \
+        f() { \
+            BRANCH=$(git get-branch $1); \
+            if [ $( printf \"${BRANCH}\" | grep -cve '^\\s*$' ) -ge 1 ]; then \
+                echo \"${BRANCH}\"; \
+            else \
+                echo \"No branch match\"; \
+                exit 1; \
+            fi; \
+        }; f"
+
+    brsearch = "! \
+        set -u; \
+        f() { \
+            BRANCH=$(git get-branch $1); \
+            if [ $? -ne 0 ]; then \
+                echo \"No branch match\"; \
+                exit 1; \
+            else \
+                match_count=$( printf \"${BRANCH}\" | grep -cve '^\\s*$' ); \
+                if [ ${match_count} -eq 1 ]; then \
+                    echo \"${BRANCH}\"; \
+                else \
+                    echo \"Multiple branches match\"; \
+                    git brsearchall \"$1\"; \
+                    exit 2; \
+                fi \
+            fi \
+        }; f"
 
     # checkout for a branch with a specific identifier
-    cobr = "!_f(){ BRANCH=\"$(git brsearch \"$1\")\" || { echo \"$BRANCH\"; exit 1;}; git co \"$BRANCH\"; }; _f"
+    cobr = "!\
+        set -u; \
+        f(){ \
+            BRANCH=\"$(git brsearch \"$1\")\"; \
+            if [ $? -ne 0 ]; then \
+                printf \"${BRANCH}\\n\"; \
+            else \
+                git co \"${BRANCH}\"; \
+            fi \
+        }; f"
 
     # Merge aliases
     # =============
