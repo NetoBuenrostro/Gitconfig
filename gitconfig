@@ -61,14 +61,14 @@
     # Branching
     # ==================================================================
     co    = checkout # git co <branch>
-    # Create a new branch and switch to it ex.: git nb <branch>
-    # Create a new branch based on other and switch to it ex.: git nb <branch> <based branch>
+    ## Create a new branch and switch to it ex.: git nb <branch>
+    ## Create a new branch based on other and switch to it ex.: git nb <branch> <based branch>
     nb    = checkout -b
-    # Create a new branch without a parent
+    ## Create a new branch without a parent
     nbb   = checkout --orphan
-    # Get information from the local branches
+    ## Get information from the local branches
     br    = branch -v
-    # Get information from the remote branches
+    ## Get information from the remote branches
     re    = remote -v
 
     # Branch commands
@@ -207,6 +207,8 @@
     amendfile = commit --amend --no-edit
     ## add all the files in our work directory except the new ones to the previous commit
     amendall  = commit --amend --all
+    ## Amend the commit message on a specific commit
+    amend-msg = commit --amend -c
 
 
     # Fetch commands
