@@ -153,9 +153,9 @@
     lg    = log -p
     lol   = log --graph --decorate --date=relative --oneline
     lola  = log --graph --decorate --date=relative --oneline --all
-    lolc  = log --graph --color --pretty=format:'%C(yellow)%h%Creset - %d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
-    lolac = log --graph --color --pretty=format:'%C(yellow)%h%Creset - %d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all
-    lolf  = log --graph         --pretty=format:'%C(yellow)%h%Creset - %d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --date=relative
+    lolc  = log --graph --color --pretty=format:'%C(yellow)%h%Creset - %C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+    lolac = log --graph --color --pretty=format:'%C(yellow)%h%Creset - %C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all
+    lolf  = log --graph         --pretty=format:'%C(yellow)%h%Creset - %C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --date=relative
     lbrl  = !git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
     lbra  = !git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)'
 
