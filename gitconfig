@@ -64,6 +64,8 @@
     # Create a new branch and switch to it ex.: git nb <branch>
     # Create a new branch based on other and switch to it ex.: git nb <branch> <based branch>
     nb    = checkout -b
+    # Create a new branch without a parent
+    nbb   = checkout --orphan
     # Get information from the local branches
     br    = branch -v
     # Get information from the remote branches
