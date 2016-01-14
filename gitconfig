@@ -47,7 +47,11 @@
     y     = diff "@{yesterday}"
     st    = status -sb
 
-
+    # Adding files
+    # ==================================================================
+    track = add -N
+    added = add -e
+    addp  = add -p
 
     # Runing gitk with git
     k     = !gitk
