@@ -297,3 +297,7 @@
 # Allowing to just do `git push` to push the current branch to the configured upstream
 [push]
     default = upstream
+
+# Remove empty directory from svn repo as they get removed from local git
+[svn]
+    rmdir = true
