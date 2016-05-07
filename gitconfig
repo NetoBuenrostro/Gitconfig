@@ -70,6 +70,15 @@
     nb    = checkout -b
     ## Create a new branch without a parent
     nbb   = checkout --orphan
+    ## Create a new branch without a parent
+    # TODO: Check if there is any parameter passed to the function \
+    nbs   = "! \
+        set -e; \
+        set -u; \
+        f() { \
+            branchName=\"$( echo \"$1\" | tr -cd '[:alnum:][:blank:]-_' | tr '[:blank:]' '_' )\"; \
+            git checkout -b \"${branchName}\" ${2:-}; \
+        }; f"
     ## Get information from the local branches
     br    = branch -v
     ## Get information from the remote branches
@@ -301,3 +310,8 @@
 # Remove empty directory from svn repo as they get removed from local git
 [svn]
     rmdir = true
+
+[filter "lfs"]
+    clean = git-lfs clean %f
+    smudge = git-lfs smudge %f
+    required = true
