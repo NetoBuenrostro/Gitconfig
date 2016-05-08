@@ -244,7 +244,7 @@
     # ==================================================================
     killspace    = !git stripspace <
     killcomments = !git stripspace --strip-comments <
-    killcomments = !git stripspace --comment-lines <
+    addcomments = !git stripspace --comment-lines <
 
     # Utils
     # ==================================================================
