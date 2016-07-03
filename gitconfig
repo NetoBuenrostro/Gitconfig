@@ -80,7 +80,8 @@
     track = add -N
     added = add -e
     addp  = add -p
-    addi  = add --intent-to-add
+    # Add new files to the index without adding the content
+    adding = add --intent-to-add
 
     # Removing files from history
     # ==================================================================
