@@ -28,6 +28,13 @@
 
 
 
+    # template
+    # <Alias name>     = "! \
+    #     set -e; \
+    #     set -u; \
+    #     f() { \
+    # }; \
+    # f"
 [alias]
     tg    = tag -l
 
