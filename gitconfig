@@ -82,6 +82,24 @@
     addp  = add -p
     addi  = add --intent-to-add
 
+    # Removing files from history
+    # ==================================================================
+
+    rm-from-all-history = "! \
+        set -e; \
+        set -u; \
+        f() { \
+            git filter-branch --prune-empty -d /dev/shm/tmp --index-filter \"git rm --force --cached --ignore-unmatch '$1'\" -- --all; \
+            `# clear any trace` \
+            git for-each-ref --format='delete %(refname)' refs/original | git update-ref --stdin \
+            git reflog expire --expire=now --all \
+            git gc --prune=now \
+        }; \
+    f"
+
+    # Spunoff directory as project with all its changes
+    # git filter-branch --subdirectory-filter foodir -- --all
+
     # Runing gitk with git
     k     = !gitk
     ka    = !gitk --all
