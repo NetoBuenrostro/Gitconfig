@@ -42,6 +42,7 @@
     dftool= difftool # Default tool
     dfp4  = difftool --tool=p4merge # launch diff with p4merge
     dfvim = difftool --tool=vimdiff # launch diff with vimdiff
+    mtool-meld = mergetool --tool=meld
     w     = whatchanged
     wdiff = diff --word-diff=plain
     y     = diff "@{yesterday}"
