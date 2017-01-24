@@ -74,8 +74,11 @@
     nb    = checkout -b
     ## Create a new branch without a parent
     nbb   = checkout --orphan
-    ## Create a new branch without a parent
+
     # TODO: Check if there is any parameter passed to the function \
+    # Create a new branch and name it with a string that has spaces within
+    # Ex. git nbs "this is a test branch"
+    # Ex. git nbs "this is a test branch based on master" master
     nbs   = "! \
         set -e; \
         set -u; \
@@ -83,6 +86,9 @@
             branchName=\"$( echo \"$1\" | tr -cd '[:alnum:][:blank:]-_' | tr '[:blank:]' '_' )\"; \
             git checkout -b \"${branchName}\" ${2:-}; \
         }; f"
+        #branch_name=\"$( echo \"$1\" | tr -cd '[:alnum:][:blank:]' | tr ' ' '_' | tr '[:upper:]' '[:lower:]' )\"; \
+        # git checkout -b ${branch_name} \
+
     ## Get information from the local branches
     br    = branch -v
     ## Get information from the remote branches
