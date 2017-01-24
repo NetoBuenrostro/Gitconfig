@@ -48,6 +48,9 @@
     y     = diff "@{yesterday}"
     st    = status -sb
 
+    # Remove files from the repository, but not from my current directory
+    rmc   = rm --cached
+
     # Adding files
     # ==================================================================
     track = add -N
