@@ -112,6 +112,7 @@
                 printf \"${result}\\n\"; \
             fi \
         }; f"
+
     brsearchall = "! \
         set -e; \
         set -u; \
@@ -126,6 +127,7 @@
         }; f"
 
     brsearch = "! \
+        set -e; \
         set -u; \
         f() { \
             BRANCH=$(git get-branch $1); \
@@ -144,8 +146,41 @@
             fi \
         }; f"
 
+    ##
+    # Function template
+    # Back slashes and semicolon have to be used because git makes one line of
+    # the function, omitting them will throw errors
+    ##
+    # <git alias> = "! \
+    #     set -e; \
+    #     set -u; \
+    #     f() { \
+    #         # Bash
+    #     }; f"
+
+    brsearchremotes = "! \
+        set -e; \
+        set -u; \
+        f() { \
+            BRANCH=$(git branch -r | grep \"$1\" | cut -c3-); \
+            if [ $? -ne 0 ]; then \
+                echo \"No branch match\"; \
+                exit 1; \
+            else \
+                match_count=$( printf \"${BRANCH}\" | grep -cve '^\\s*$' ); \
+                if [ ${match_count} -eq 1 ]; then \
+                    echo \"${BRANCH}\"; \
+                else \
+                    echo \"Multiple branches match\"; \
+                    echo \"${BRANCH}\"; \
+                    exit 2; \
+                fi \
+            fi \
+        }; f"
+
     # checkout for a branch with a specific identifier
     cobr = "!\
+        set -e; \
         set -u; \
         f(){ \
             BRANCH=\"$(git brsearch \"$1\")\"; \
@@ -306,6 +341,9 @@
 
 [difftool "vimdiff"]
     cmd = vimdiff $LOCAL $REMOTE
+
+#[mergetool "meld"]
+#    cmd = meld --diff $LOCAL $BASE $REMOTE --output $MERGED
 
 # Using p4merge, because it let us diff images
 # to call it we have to use git dfp4
