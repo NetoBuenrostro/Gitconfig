@@ -29,6 +29,7 @@
 [alias]
     tg    = tag -l
     ci    = commit
+    cim   = ci -m
 
     # Diff commands
     # =============
@@ -46,7 +47,9 @@
     w     = whatchanged
     wdiff = diff --word-diff=plain
     y     = diff "@{yesterday}"
-    st    = status -sb
+
+    st     = status -sb
+    st-all = status -sb -uall
 
     # Remove files from the repository, but not from my current directory
     rmc   = rm --cached
