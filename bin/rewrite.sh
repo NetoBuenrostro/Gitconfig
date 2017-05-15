@@ -30,4 +30,4 @@ git filter-branch -f --env-filter "
     GIT_AUTHOR_EMAIL='neto.buenrostro@gmail.com'
     GIT_COMMITTER_NAME='Ernesto Buenrostro'
     GIT_COMMITTER_EMAIL='neto.buenrostro@gmail.com'
-  " HEAD
+  " HEAD~5..HEAD
