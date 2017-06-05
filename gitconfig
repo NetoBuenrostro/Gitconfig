@@ -52,6 +52,7 @@
 
     st     = status -sb
     st-all = status -sb -uall
+    st-u   = diff --name-status --diff-filter=U
 
     # Remove files from the repository, but not from my current directory
     rmc   = rm --cached
