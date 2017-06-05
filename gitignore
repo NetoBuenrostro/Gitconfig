@@ -18,3 +18,5 @@
 /nbproject/
 # Sublimetext
 .sublime-project
+composer.phar
+composer
