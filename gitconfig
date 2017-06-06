@@ -291,6 +291,9 @@
     ## Remove the staged changes (This is opposite to git add)
     unstage  = reset HEAD
 
+
+    clearindex  = reset HEAD
+
     ## Remove the last commit but keep the changes in the working directory
     uncommit = reset --soft HEAD^
 
