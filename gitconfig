@@ -35,16 +35,17 @@
 
     # Diff commands
     # =============
-    dfchk = diff --check        # Check for errors combined with core.whitespace (space, tab ... )
+    dfchk = diff --check                # Check for errors combined with core.whitespace (space, tab ... )
     dc    = diff --cached --histogram
+    dc-p  = !git --no-pager dc          # Show cached diff without using a pager
     ds    = diff --staged --histogram
     df    = diff --histogram
-    dfw   = diff --word-diff
-    dfnp  = !git --no-pager diff
+    dfw   = diff --word-diff            # Shows the diff only showing the changed words
+    dfnp  = !git --no-pager diff        # Shows the diff without using a pager
     # Using external tools
-    dftool= difftool # Default tool
-    dfp4  = difftool --tool=p4merge # launch diff with p4merge
-    dfvim = difftool --tool=vimdiff # launch diff with vimdiff
+    dftool= difftool                    # Default tool
+    dfp4  = difftool --tool=p4merge     # launch diff with p4merge
+    dfvim = difftool --tool=vimdiff     # launch diff with vimdiff
     mtool-meld = mergetool --tool=meld
     w     = whatchanged
     wdiff = diff --word-diff=plain
@@ -66,7 +67,7 @@
     # Runing gitk with git
     k     = !gitk
     ka    = !gitk --all
-    kme   = !gitk --all --author=`git config user.email`
+    kme   = !gitk --all --author=$(git config user.email)
 
 
 
@@ -74,7 +75,7 @@
 
     # Branching
     # ==================================================================
-    co    = checkout # git co <branch>
+    co    = checkout            # git co <branch>
     ## Create a new branch and switch to it ex.: git nb <branch>
     ## Create a new branch based on other and switch to it ex.: git nb <branch> <based branch>
     nb    = checkout -b
@@ -83,22 +84,23 @@
 
     # TODO: Check if there is any parameter passed to the function \
     # Create a new branch and name it with a string that has spaces within
-    # Ex. git nbs "this is a test branch"
-    # Ex. git nbs "this is a test branch based on master" master
+    # Ex. ``git nbs "this is a test branch"`` will create ``this_is_a_test_branch`` based on the current branch
+    # Ex. ``git nbs "this is a test branch based on master" master`` will create ``this_is_a_test_branch_based_on_master``
     nbs   = "! \
         set -e; \
         set -u; \
         f() { \
-            branchName=\"$( echo \"$1\" | tr -cd '[:alnum:][:blank:]-_' | tr '[:blank:]' '_' )\"; \
+            branchName=\"$( echo \"$1\" | tr -cd '[:alnum:][:blank:]-_' | tr '[:blank:]' '_' | tr '[:upper:]' '[:lower:]' )\"; \
             git checkout -b \"${branchName}\" ${2:-}; \
         }; f"
-        #branch_name=\"$( echo \"$1\" | tr -cd '[:alnum:][:blank:]' | tr ' ' '_' | tr '[:upper:]' '[:lower:]' )\"; \
         # git checkout -b ${branch_name} \
 
     ## Get information from the local branches
     br    = branch -v
     ## Get information from the remote branches
     re    = remote -v
+    lsbranch     = !git for-each-ref --sort='authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
+    lsbranch-asc = !git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
 
     # Branch commands
     # ===============
