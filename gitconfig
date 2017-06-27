@@ -42,6 +42,7 @@
     df    = diff --histogram
     dfw   = diff --word-diff            # Shows the diff only showing the changed words
     dfnp  = !git --no-pager diff        # Shows the diff without using a pager
+    dfnb  = !git diff --word-diff-regex=[^[:space:]] # Show the diff ignoring white space or new lines
     # Using external tools
     dftool= difftool                    # Default tool
     dfp4  = difftool --tool=p4merge     # launch diff with p4merge
