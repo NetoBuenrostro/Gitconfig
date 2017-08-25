@@ -108,14 +108,19 @@
     # Remove remote branch if git is older than 1.7.0 we can do `git push origin :<branchName>`
     #rmr  = "!f() { git push origin :$1; }; f"
     rmrbranch = push origin --delete
+    # Reove the current branch printing the branch commit
+    rmbranch = "! git branch --no-abbrev --verbose"
 
     # Search for any branch which include the word
+    # debug flags
+    #
+    #    set -x; \
     get-branch = "! \
         set -e; \
         set -u; \
         f() { \
             result=\"$( git branch | grep \"$1\" | cut -c3-)\"; \
-            if [ $( printf \"${result}\" | wc -m ) -eq 0 ]; then \
+            if [ ${result:-x} == \"x\" ]; then \
                 exit 1; \
             else \
                 printf \"${result}\\n\"; \
@@ -135,8 +140,11 @@
             fi; \
         }; f"
 
+    # Debug flags
+    #
+        # set -x; \
+        # set -e; \
     brsearch = "! \
-        set -e; \
         set -u; \
         f() { \
             BRANCH=$(git get-branch $1); \
@@ -188,11 +196,14 @@
         }; f"
 
     # checkout for a branch with a specific identifier
+    # Debug flags
+        # set -e; \
+        # set -x; \
+
     cobr = "!\
-        set -e; \
         set -u; \
         f(){ \
-            BRANCH=\"$(git brsearch \"$1\")\"; \
+            BRANCH=$( git brsearch \"$1\" ); \
             if [ $? -ne 0 ]; then \
                 printf \"${BRANCH}\\n\"; \
             else \
@@ -339,7 +350,6 @@
     summary     = true
 
 [diff]
-    tool        = meld
     algorithm   = patience
 
 [difftool]
@@ -354,6 +364,8 @@
 
 [gui]
     commitmsgwidth = 72
+
+[difftool "meld"]
 
 [difftool "vimdiff"]
     cmd = vimdiff $LOCAL $REMOTE
@@ -379,3 +391,9 @@
     clean = git-lfs clean %f
     smudge = git-lfs smudge %f
     required = true
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
