@@ -1,1 +1,42 @@
-#!/usr/bin/env ruby
+#!/bin/bash
+
+# This hook allow us to forbid commiting to some branches
+# thus making us to uncommit and move the commit to a different branch
+
+echo 'Running pre-commit hook'
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+forbidden_branches=("master" "dev")
+
+in_array () {
+    # odd syntax here for passing array parameters: http://stackoverflow.com/questions/8082947/how-to-pass-an-array-to-a-bash-function
+    local list=$1[@]
+    local elem=$2
+
+    # echo "list" ${!list}
+    # echo "elem" $elem
+
+    for i in "${!list}"
+    do
+        # echo "Checking to see if" "$i" "is the same as" "${elem}"
+        if [ "$i" == "${elem}" ] ; then
+            # echo "$i" "was the same as" "${elem}"
+            return 0
+        fi
+    done
+
+    # echo "Could not find element"
+    return 1
+}
+
+if in_array forbidden_branches "${BRANCH}" && [ "${GIT_COMMIT_TO_MASTER}" != "true" ]
+then
+  if [ -e "${GIT_DIR}/MERGE_MODE" ]
+  then
+    echo "Merge to \"${BRANCH}\" is allowed."
+    exit 0
+  else
+    echo "Commit directly to \"${BRANCH}\" is discouraged."
+    echo "If you want to do this, please set BYPASS_COMMIT_PROHIBITION GIT_COMMIT_TO_MASTER=true and then commit."
+    exit 1
+  fi
+fi
