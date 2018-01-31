@@ -5,7 +5,7 @@
 
 echo 'Running pre-commit hook'
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
-forbidden_branches=("master" "dev")
+forbidden_branches=("master" "dev" "develop")
 
 in_array () {
     # odd syntax here for passing array parameters: http://stackoverflow.com/questions/8082947/how-to-pass-an-array-to-a-bash-function

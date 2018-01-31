@@ -6,7 +6,7 @@
 
 [core]
     editor           = vim
-    filemode         = false
+    fileMode = false
     bare             = false
     logallrefupdates = true
     whitespace       = tab-in-indent, trailing-space
@@ -64,6 +64,7 @@
     track = add -N
     added = add -e
     addp  = add -p
+    addi  = add --intent-to-add
 
     # Runing gitk with git
     k     = !gitk
@@ -220,7 +221,37 @@
     mrp   = merge --strategy-option=patience
     plr   = pull --rebase
 
+    ##
+    # make Branch A resolve conflicts to branch b
+    # https://stackoverflow.com/questions/173919/is-there-a-theirs-version-of-git-merge-s-ours#answer-4969679
+    ##
+    # TODO: make script
+    # # in case branchA is not our current branch
+    # git checkout branchA
 
+    # # make merge commit but without conflicts!!
+    # # the contents of 'ours' will be discarded later
+    # git merge -s ours branchB    
+
+    # # make temporary branch to merged commit
+    # git branch branchTEMP         
+
+    # # get contents of working tree and index to the one of branchB
+    # git reset --hard branchB
+
+    # # reset to our merged commit but 
+    # # keep contents of working tree and index
+    # git reset --soft branchTEMP
+
+    # # change the contents of the merged commit
+    # # with the contents of branchB
+    # git commit --amend
+
+    # # get rid off our temporary branch
+    # git branch -D branchTEMP
+
+    # # verify that the merge commit contains only contents of branchB
+    # git diff HEAD branchB
 
     # http://blog.apiaxle.com/post/handy-git-tips-to-stop-you-getting-fired/#use_snapshot_stashes
     snapshot = !git stash save --keep-index "snapshot: $(date)"
@@ -290,6 +321,8 @@
     amendfile = commit --amend --no-edit
     ## add all the files in our work directory except the new ones to the previous commit
     amendall  = commit --amend --all
+    ## Amend the commit message on the last commit
+    amend-last-msg = commit --amend -c HEAD
     ## Amend the commit message on a specific commit
     amend-msg = commit --amend -c
 
@@ -304,7 +337,6 @@
     # =============
     ## Remove the staged changes (This is opposite to git add)
     unstage  = reset HEAD
-
 
     clearindex  = reset HEAD
 
@@ -324,6 +356,8 @@
     panic       = !tar cvf ../git_panic.tar *
     # Get the repository size
     repo-size   = !git count-objects -v -H | grep -P -o '(?<=size: ).*'
+    # Git-doc: Commit everything as a new version
+    doc = !git add -A && git cim 'Doc: Updating' 
 
 [color]
     ui          = auto
@@ -366,6 +400,10 @@
     commitmsgwidth = 72
 
 [difftool "meld"]
+
+[mergetool "vimdiff"]
+	cmd = vimdiff "$LOCAL" "$BASE" "$REMOTE" "$MERGED"
+	conflictstyle = diff3
 
 [difftool "vimdiff"]
     cmd = vimdiff $LOCAL $REMOTE

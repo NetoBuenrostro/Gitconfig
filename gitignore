@@ -11,6 +11,7 @@
 *.log
 *~
 *.bak
+extension/my
 
 
 ## IDE & editors projectfiles
