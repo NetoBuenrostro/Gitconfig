@@ -78,11 +78,12 @@
     # Branching
     # ==================================================================
     co    = checkout            # git co <branch>
+    co-re  = !git checkout -b "$(basename $1)"
     ## Create a new branch and switch to it ex.: git nb <branch>
     ## Create a new branch based on other and switch to it ex.: git nb <branch> <based branch>
     nb    = checkout -b
     ## Create a new branch without a parent
-    nbb   = checkout --orphan
+    nb-orphan = checkout --orphan
 
     # TODO: Check if there is any parameter passed to the function \
     # Create a new branch and name it with a string that has spaces within
@@ -98,8 +99,10 @@
         # git checkout -b ${branch_name} \
 
     ## Get information from the local branches
-    br    = branch -v
-    ## Get information from the remote branches
+    br    = branch --verbose
+    bra   = branch --all
+    brr   = branch --remotes
+    ## Get information from the remote repositories
     re    = remote -v
     lsbranch     = !git for-each-ref --sort='authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
     lsbranch-asc = !git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
