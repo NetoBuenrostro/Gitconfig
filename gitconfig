@@ -77,6 +77,8 @@
 
     # Branching
     # ==================================================================
+    currentbranch   = "rev-parse --abbrev-ref HEAD"
+
     co    = checkout            # git co <branch>
     co-re  = !git checkout -b "$(basename $1)"
     ## Create a new branch and switch to it ex.: git nb <branch>
@@ -112,7 +114,7 @@
     # Remove remote branch if git is older than 1.7.0 we can do `git push origin :<branchName>`
     #rmr  = "!f() { git push origin :$1; }; f"
     rmrbranch = push origin --delete
-    # Reove the current branch printing the branch commit
+    # Remove the current branch printing the branch commit
     rmbranch = "! git branch --no-abbrev --verbose"
 
     # Search for any branch which include the word
@@ -361,6 +363,7 @@
     repo-size   = !git count-objects -v -H | grep -P -o '(?<=size: ).*'
     # Git-doc: Commit everything as a new version
     doc = !git add -A && git cim 'Doc: Updating' 
+    wip = "!git add -A && git cim \"WIP - $(git currentbranch)\""
 
 [color]
     ui          = auto
