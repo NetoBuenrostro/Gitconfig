@@ -441,3 +441,26 @@
 [mergetool "sourcetree"]
 	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
+
+##
+# Useful filters
+##
+
+# Usage: add to your .gitattributes or .git/info/attributes
+# *.php filter=spaces2tabs
+# Repo in spaces, local using tabs
+[filter "spaces2tabs"]
+    clean    = expand   --tabs=4 --initial
+    smudge   = unexpand --tabs=4 --first-only
+    required = true
+
+# Usage: add to your .gitattributes or .git/info/attributes
+# *.php filter=tabs2spaces
+# Repo in tabs, local using spaces
+[filter "tabs2spaces"]
+    smudge   = expand   --tabs=4 --initial
+    clean    = unexpand --tabs=4 --first-only
+    required = true
+
+[merge]
+    renormalize = true
