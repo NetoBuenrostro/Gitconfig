@@ -17,7 +17,7 @@
     # eol              = native
     # To speed up over NFS
     preloadindex     = true
-
+    pager = less -F -X
 
 
 [push]
@@ -77,6 +77,21 @@
 
     # Branching
     # ==================================================================
+    # todo:
+    # get current remote name, likely "origin"
+    # remote-name=$(git remote)
+    # get current branch name
+    # push the current branch to the remote
+    # git push --set-upstream ${remote-name} ${git currentbranch}
+    push-this =  "! \
+        set -e; \
+        set -u; \
+        f() { \
+            remote-name=\"$(git remote)\"; \
+            echo \"$remote-name\"; \
+        }; f"
+#            echo \"git push --set-upstream \"${remote-name}\" $(git currentbranch) \"; \
+
     currentbranch   = "rev-parse --abbrev-ref HEAD"
 
     co    = checkout            # git co <branch>
@@ -95,15 +110,17 @@
         set -e; \
         set -u; \
         f() { \
-            branchName=\"$( echo \"$1\" | tr -cd '[:alnum:][:blank:]-_' | tr '[:blank:]' '_' | tr '[:upper:]' '[:lower:]' )\"; \
+            branchName=\"$( echo \"$1\" | sed 's/ - /-/g' | tr -cd '[:alnum:][:blank:]-_' | tr '[:blank:]' '_' | tr '[:upper:]' '[:lower:]' )\"; \
             git checkout -b \"${branchName}\" ${2:-}; \
         }; f"
         # git checkout -b ${branch_name} \
 
     ## Get information from the local branches
+    # branch = !git --no-pager branch # Using core.pager 'less -+F -+X' so less will not paginate less than a page
     br    = branch --verbose
     bra   = branch --all
     brr   = branch --remotes
+    br-merged = branch --merged # list merged branches
     ## Get information from the remote repositories
     re    = remote -v
     lsbranch     = !git for-each-ref --sort='authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
@@ -115,7 +132,10 @@
     #rmr  = "!f() { git push origin :$1; }; f"
     rmrbranch = push origin --delete
     # Remove the current branch printing the branch commit
-    rmbranch = "! git branch --no-abbrev --verbose"
+    br-remove = branch -D
+
+    # Get the existing branches with extra info
+    br-info = "! git branch --no-abbrev --verbose"
 
     # Search for any branch which include the word
     # debug flags
@@ -219,6 +239,17 @@
 
     # checkout for a branch with a specific identifier
     #cobr = "!_f(){ BRANCH=\"$(git brsearch \"$1\")\" || { echo \"$BRANCH\"; exit 1;}; git co \"$BRANCH\"; }; _f"
+    corbr = "!\
+        set -u; \
+        f(){ \
+            BRANCH=$( git brsearchremotes \"$1\" | grep -Poe '^[^/]+/\\K.*' ); \
+            printf \"${BRANCH}\\n\"; \
+            if [ $? -ne 0 ]; then \
+                printf \"${BRANCH}\\n\"; \
+            else \
+                git co \"${BRANCH}\"; \
+            fi \
+        }; f"
 
     # Merge aliases
     # =============
@@ -363,6 +394,7 @@
     repo-size   = !git count-objects -v -H | grep -P -o '(?<=size: ).*'
     # Git-doc: Commit everything as a new version
     doc = !git add -A && git cim 'Doc: Updating' 
+    wipe = "!git add -u && git cim \"WIP - $(git currentbranch)\""
     wip = "!git add -A && git cim \"WIP - $(git currentbranch)\""
 
 [color]
@@ -385,9 +417,9 @@
     changed     = green
     untracked   = cyan
 
-[merge]
-    tool        = meld
-    summary     = true
+# [merge]
+#     tool        = meld
+#     summary     = true
 
 [diff]
     algorithm   = patience
