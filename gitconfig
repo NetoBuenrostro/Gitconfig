@@ -361,7 +361,10 @@
     amend-last-msg = commit --amend -c HEAD
     ## Amend the commit message on a specific commit
     amend-msg = commit --amend -c
-
+    ## Amend the previous commit including the date
+    amend-msg-and-time = commit --amend --date=now
+    ## Amend the previous commit author and time
+    amend-author-and-time = commit --amend --reset-author --no-edit
 
     # Fetch commands
     # ==============
