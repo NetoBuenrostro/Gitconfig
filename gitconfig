@@ -87,10 +87,14 @@
         set -e; \
         set -u; \
         f() { \
-            remote-name=\"$(git remote)\"; \
-            echo \"$remote-name\"; \
+            remote_name=\"$(git remote)\"; \
+            echo \"Pushing $(tput bold)$(git currentbranch)$(tput sgr0) branch to $(tput bold)$remote_name$(tput sgr0) remote\"; \
+            git push -u \"${remote-name}\" HEAD \
         }; f"
-#            echo \"git push --set-upstream \"${remote-name}\" $(git currentbranch) \"; \
+        #             git push -u \"${remote-name}\" HEAD \
+
+        # git push -u origin HEAD
+        # echo \"git push --set-upstream \"${remote-name}\" $(git currentbranch) \"; \
 
     currentbranch   = "rev-parse --abbrev-ref HEAD"
 
@@ -115,6 +119,15 @@
         }; f"
         # git checkout -b ${branch_name} \
 
+    # Create a new branch from string and add the year and month
+    # git nbsd 'this is the name of my branch' <from branch>
+    nbd = "! \
+        set -e; \
+        set -u; \
+        f() { \
+            date_y_m=\"$(date +%Y%m )\"; \
+            git nbs \"$date_y_m $1\" ${2:-}; \
+        }; f"
     ## Get information from the local branches
     # branch = !git --no-pager branch # Using core.pager 'less -+F -+X' so less will not paginate less than a page
     br    = branch --verbose
@@ -347,7 +360,14 @@
     # Stop ignoring changes in a file
     unignore    = update-index --no-assume-unchanged
 
-
+    # Add ignore rules to the .gitignore file
+    ignore-file = "!\
+        set -u; \
+        f(){ \
+            for i in $*; do \
+                echo $i >> .gitignore; \
+            done \
+        }; f"
 
     # Amending the previous commit
     # ==================================================================
@@ -442,9 +462,10 @@
 
 [difftool "meld"]
 
-[mergetool "vimdiff"]
-	cmd = vimdiff "$LOCAL" "$BASE" "$REMOTE" "$MERGED"
-	conflictstyle = diff3
+# [mergetool "vimdiff"]
+#     cmd = vimdiff "$LOCAL" "$BASE" "$REMOTE" "$MERGED"
+#     conflictstyle = diff3
+#     prompt = false
 
 [difftool "vimdiff"]
     cmd = vimdiff $LOCAL $REMOTE
@@ -499,3 +520,5 @@
 
 [merge]
     renormalize = true
+	tool = vimdiff
+	conflictstyle = diff3
