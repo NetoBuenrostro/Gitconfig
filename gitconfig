@@ -89,7 +89,7 @@
         f() { \
             remote_name=\"$(git remote)\"; \
             echo \"Pushing $(tput bold)$(git currentbranch)$(tput sgr0) branch to $(tput bold)$remote_name$(tput sgr0) remote\"; \
-            git push -u \"${remote-name}\" HEAD \
+            git push -u \"${remote_name}\" HEAD; \
         }; f"
         #             git push -u \"${remote-name}\" HEAD \
 
@@ -313,11 +313,17 @@
     # Formating http://git-scm.com/docs/git-log
     # Display the log including the commit content
     lg    = log -p
+    # Displays a nice list of commits of the current branch
     lol   = log --graph --decorate --date=relative --oneline
+    # Displays a nice list of commits of all the branches
     lola  = log --graph --decorate --date=relative --oneline --all
-    lolc  = log --graph --color --pretty=format:'%C(yellow)%h%Creset - %C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
-    lolac = log --graph --color --pretty=format:'%C(yellow)%h%Creset - %C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --all
-    lolf  = log --graph         --pretty=format:'%C(yellow)%h%Creset - %C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --date=relative
+    # Displays a nice list of commits of the current branch including time, author name and commiter name
+    lolc  = log --graph --color --pretty=format:'%C(yellow)%h%Creset - %C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an> %ai %C(dim white)<%cn> %ci%Creset'
+    # Displays a nice list of commits of all the branches including time, author name and commiter name
+    lolac = log --graph --color --pretty=format:'%C(yellow)%h%Creset - %C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an> %ai %C(dim white)<%cn> %ci%Creset' --all
+    # Looks the same as lolc ... ????
+    lolf  = log --graph         --pretty=format:'%C(yellow)%h%Creset - %C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an> %ai %C(dim white)<%cn> %ci%Creset' --date=relative
+    # git log branch
     lbrl  = !git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
     lbra  = !git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)'
 
@@ -356,6 +362,13 @@
     # it will overwrite the file without raise a warning
     # Those are not stored in .gitignore
     ignore      = update-index --assume-unchanged
+
+    # Mark modified files as unchanged
+    ignore-modified = "!\
+        set -u; \
+        f(){ \
+            git ls-files --modified -z $* | xargs -0 -I{} git update-index --assume-unchanged {}; \
+        }; f"
 
     # Stop ignoring changes in a file
     unignore    = update-index --no-assume-unchanged
@@ -495,7 +508,7 @@
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
 [mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
 
 ##
