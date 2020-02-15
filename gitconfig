@@ -100,6 +100,10 @@
 
     co    = checkout            # git co <branch>
     co-re  = !git checkout -b "$(basename $1)"
+
+    # Find commit in branches
+    find-commit-in-branches = branch -a --contains
+
     ## Create a new branch and switch to it ex.: git nb <branch>
     ## Create a new branch based on other and switch to it ex.: git nb <branch> <based branch>
     nb    = checkout -b
@@ -110,12 +114,13 @@
     # Create a new branch and name it with a string that has spaces within
     # Ex. ``git nbs "this is a test branch"`` will create ``this_is_a_test_branch`` based on the current branch
     # Ex. ``git nbs "this is a test branch based on master" master`` will create ``this_is_a_test_branch_based_on_master``
+    # We're limiting branch names to 72 characters
     nbs   = "! \
         set -e; \
         set -u; \
         f() { \
             branchName=\"$( echo \"$1\" | sed 's/ - /-/g' | tr -cd '[:alnum:][:blank:]-_' | tr '[:blank:]' '_' | tr '[:upper:]' '[:lower:]' )\"; \
-            git checkout -b \"${branchName}\" ${2:-}; \
+            git checkout -b \"${branchName::72}\" ${2:-}; \
         }; f"
         # git checkout -b ${branch_name} \
 
@@ -128,6 +133,11 @@
             date_y_m=\"$(date +%Y%m )\"; \
             git nbs \"$date_y_m $1\" ${2:-}; \
         }; f"
+    # New release branch
+    # nbr
+    # New hotfix branch
+    # nbhf
+
     ## Get information from the local branches
     # branch = !git --no-pager branch # Using core.pager 'less -+F -+X' so less will not paginate less than a page
     br    = branch --verbose
@@ -153,9 +163,9 @@
     # Search for any branch which include the word
     # debug flags
     #
-    #    set -x; \
-    get-branch = "! \
+    get-branch = "!\
         set -e; \
+        set -x; \
         set -u; \
         f() { \
             result=\"$( git branch | grep \"$1\" | cut -c3-)\"; \
@@ -308,6 +318,18 @@
     # http://stackoverflow.com/questions/1360712/git-stash-cannot-apply-to-a-dirty-working-tree-please-stage-your-changes#answer-3733698
     unstash  = !git stash show -p | git apply -3 && git stash drop
 
+    ############################################################################
+    # Git find files in history
+    ############################################################################
+    # https://stackoverflow.com/a/372970/1476332
+    find = log --all -- 
+    # Git find file in branch from author
+    # TODO: git log --grep='branch' --author='me' -- *.sql
+    # TODO: If you want to see where it's been deleted / created /etc, you can use git log --all --stat -- **/my_file.png
+    ############################################################################
+    # END - Git find files in history
+    ############################################################################
+
     # Log commands
     # ==================================================================
     # Formating http://git-scm.com/docs/git-log
@@ -381,6 +403,15 @@
                 echo $i >> .gitignore; \
             done \
         }; f"
+
+    #   hide = update-index --assume-unchanged
+    #   unhide = update-index --no-assume-unchanged
+    #   unhide-all = update-index --really-refresh
+    #   hidden = !git ls-files -v | grep \"^[a-z]\"
+    #   ignored = !git status -s --ignored | grep \"^!!\"
+
+
+
 
     # Amending the previous commit
     # ==================================================================
