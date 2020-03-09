@@ -30,8 +30,10 @@
 
 [alias]
     tg    = tag -l
-    ci    = commit
-    cim   = !git ci -m
+
+    ci     = commit
+    cim    = !git ci -m
+    ci-msg = commit --allow-empty -m
 
     # Diff commands
     # =============
@@ -148,6 +150,12 @@
     re    = remote -v
     lsbranch     = !git for-each-ref --sort='authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
     lsbranch-asc = !git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
+
+    lsrbranch     = !git for-each-ref --sort='authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/remotes
+    lsrbranch-asc = !git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/remotes
+
+    lsstash     = !git for-each-ref --sort='authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/stash
+    lsstash-asc = !git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/stash
 
     # Branch commands
     # ===============
@@ -276,6 +284,7 @@
 
     # Merge aliases
     # =============
+    mne   = merge --no-edit
     mff   = merge --ff-only
     mrp   = merge --strategy-option=patience
     plr   = pull --rebase
