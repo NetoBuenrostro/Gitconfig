@@ -98,6 +98,8 @@
         # git push -u origin HEAD
         # echo \"git push --set-upstream \"${remote-name}\" $(git currentbranch) \"; \
 
+    # Git 2.22 and above
+    # git branch --show-current
     currentbranch   = "rev-parse --abbrev-ref HEAD"
 
     co    = checkout            # git co <branch>
@@ -122,6 +124,8 @@
         set -u; \
         f() { \
             branchName=\"$( echo \"$1\" | sed 's/ - /-/g' | tr -cd '[:alnum:][:blank:]-_' | tr '[:blank:]' '_' | tr '[:upper:]' '[:lower:]' )\"; \
+            echo $branchName; \
+            echo 'git checkout -b \"${branchName::72}\" ${2:-}'; \
             git checkout -b \"${branchName::72}\" ${2:-}; \
         }; f"
         # git checkout -b ${branch_name} \
@@ -131,6 +135,7 @@
     nbd = "! \
         set -e; \
         set -u; \
+        set -x; \
         f() { \
             date_y_m=\"$(date +%Y%m )\"; \
             git nbs \"$date_y_m $1\" ${2:-}; \
@@ -140,6 +145,10 @@
     # New hotfix branch
     # nbhf
 
+    test = "! \
+        f() { \
+          echo \"Hello World!\"; \
+        }; f"
     ## Get information from the local branches
     # branch = !git --no-pager branch # Using core.pager 'less -+F -+X' so less will not paginate less than a page
     br    = branch --verbose
@@ -370,6 +379,9 @@
     # Show my commits only
     log-me      = !git config user.email | xargs -I{} git lolc --author={}
 
+    # Show commit information
+    cinfo = show --pretty=fuller --quiet
+
     # Show information about files in the index
     ls          = ls-files
 
@@ -472,6 +484,18 @@
     doc = !git add -A && git cim 'Doc: Updating' 
     wipe = "!git add -u && git cim \"WIP - $(git currentbranch)\""
     wip = "!git add -A && git cim \"WIP - $(git currentbranch)\""
+
+    # Extras
+        # set -x; \
+    release = "!\
+        set -u; \
+        f(){ \
+            current_branch=$(git currentbranch); \
+            tag_name=\"release/$(date +%F)\"; \
+            git tag ${tag_name}; \
+            git push origin ${tag_name} ${current_branch}; \
+        }; f"
+
 
 [color]
     ui          = auto
