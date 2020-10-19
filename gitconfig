@@ -123,32 +123,46 @@
         set -e; \
         set -u; \
         f() { \
-            branchName=\"$( echo \"$1\" | sed 's/ - /-/g' | tr -cd '[:alnum:][:blank:]-_' | tr '[:blank:]' '_' | tr '[:upper:]' '[:lower:]' )\"; \
+            branchName=\"$( echo \\\"$1\\\" | sed 's/ - /-/g' | tr -cd '[:alnum:][:blank:]-_' | tr '[:blank:]' '_' | tr '[:upper:]' '[:lower:]' )\"; \
             echo $branchName; \
             echo 'git checkout -b \"${branchName::72}\" ${2:-}'; \
-            git checkout -b \"${branchName::72}\" ${2:-}; \
+            git checkout -b \"${branchName}\" ${2:-}; \
         }; f"
         # git checkout -b ${branch_name} \
 
     # Create a new branch from string and add the year and month
-    # git nbsd 'this is the name of my branch' <from branch>
-    nbd = "! \
-        set -e; \
-        set -u; \
-        set -x; \
-        f() { \
-            date_y_m=\"$(date +%Y%m )\"; \
-            git nbs \"$date_y_m $1\" ${2:-}; \
-        }; f"
+    # git nbd 'this is the name of my branch' <from branch>
+    # nbd = "! \
+    #     set -e; \
+    #     set -u; \
+    #     set -x; \
+    #     f() { \
+    #         date_y_m=\"$(date +%Y%m )\"; \
+    #         git nbs \"$date_y_m $1\" ${2:-}; \
+    #     }; f"
+
+
+
+
+    nbd = "!date_y_m=\"$(date +%Y%m )\"; git nbs \"$date_y_m $1\" ${2:-}; #"
     # New release branch
     # nbr
     # New hotfix branch
     # nbhf
 
+    debug  = "!set -x; GIT_TRACE=2 GIT_CURL_VERBOSE=2 GIT_TRACE_PERFORMANCE=2 GIT_TRACE_PACK_ACCESS=2 GIT_TRACE_PACKET=2 GIT_TRACE_PACKFILE=2 GIT_TRACE_SETUP=2 GIT_TRACE_SHALLOW=2 git"
+
+    # Quote / unquote a sh command, converting it to / from a git alias string
+    # https://stackoverflow.com/a/39616600/1476332
+    quote-string = "!read -r l; printf \\\"!; printf %s \"$l\" | sed 's/\\([\\\"]\\)/\\\\\\1/g'; printf \" #\\\"\\n\" #"
+    # quote-string-undo = "!read -r l; printf %s \"$l\" | sed 's/\\\\\\([\\\"]\\)/\\1/g'; printf \"\\n\" #"
+
+    # test alias
     test = "! \
         f() { \
           echo \"Hello World!\"; \
         }; f"
+
     ## Get information from the local branches
     # branch = !git --no-pager branch # Using core.pager 'less -+F -+X' so less will not paginate less than a page
     br    = branch --verbose
@@ -492,6 +506,15 @@
         f(){ \
             current_branch=$(git currentbranch); \
             tag_name=\"release/$(date +%F)\"; \
+            git tag ${tag_name}; \
+            git push origin ${tag_name} ${current_branch}; \
+        }; f"
+
+    hotfix = "!\
+        set -u; \
+        f(){ \
+            current_branch=$(git currentbranch); \
+            tag_name=\"hotfix/$(date +%F)\"; \
             git tag ${tag_name}; \
             git push origin ${tag_name} ${current_branch}; \
         }; f"
