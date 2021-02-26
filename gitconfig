@@ -130,6 +130,16 @@
         }; f"
         # git checkout -b ${branch_name} \
 
+    nbs0   = "! \
+        set -e; \
+        set -u; \
+        f() { \
+            branchName=\"$( echo \\\"$1\\\" | sed 's/ - /-/g' | tr -cd '[:alnum:][:blank:]-_' | tr '[:blank:]' '_' | tr '[:upper:]' '[:lower:]' )\"; \
+            echo $branchName; \
+        }; f"
+            #echo 'git checkout -b \"${branchName::72}\" ${2:-}'; \
+        # git checkout -b ${branch_name} \
+
     # Create a new branch from string and add the year and month
     # git nbd 'this is the name of my branch' <from branch>
     # nbd = "! \
@@ -141,14 +151,49 @@
     #         git nbs \"$date_y_m $1\" ${2:-}; \
     #     }; f"
 
-
-
-
     nbd = "!date_y_m=\"$(date +%Y%m )\"; git nbs \"$date_y_m $1\" ${2:-}; #"
+    nbd0 = "!date_y_m=\"$(date +%Y%m )\"; git nbs0 \"$date_y_m $1\" ${2:-}; #"
+
     # New release branch
-    # nbr
+    nb-release = "! \
+        set -e; \
+        set -u; \
+        f() { \
+            branchName=\"release/$( git nbd0 \"$1\" ${2:-}; )\"; \
+            echo $branchName; \
+            echo 'git checkout -b \"${branchName::72}\" ${2:-}'; \
+            git checkout -b \"${branchName}\" ${2:-}; \
+        }; f"
     # New hotfix branch
-    # nbhf
+    nb-hotfix = "! \
+        set -e; \
+        set -u; \
+        f() { \
+            branchName=\"hotfix/$( git nbd0 \"$1\" ${2:-}; )\"; \
+            echo $branchName; \
+            echo 'git checkout -b \"${branchName::72}\" ${2:-}'; \
+            git checkout -b \"${branchName}\" ${2:-}; \
+        }; f"
+    # New bugfix branch
+    nb-bugfix = "! \
+        set -e; \
+        set -u; \
+        f() { \
+            branchName=\"bugfix/$( git nbd0 \"$1\" ${2:-}; )\"; \
+            echo $branchName; \
+            echo 'git checkout -b \"${branchName::72}\" ${2:-}'; \
+            git checkout -b \"${branchName}\" ${2:-}; \
+        }; f"
+    # New feature branch
+    nb-feature = "! \
+        set -e; \
+        set -u; \
+        f() { \
+            branchName=\"feature/$( git nbd0 \"$1\" ${2:-}; )\"; \
+            echo $branchName; \
+            echo 'git checkout -b \"${branchName::72}\" ${2:-}'; \
+            git checkout -b \"${branchName}\" ${2:-}; \
+        }; f"
 
     debug  = "!set -x; GIT_TRACE=2 GIT_CURL_VERBOSE=2 GIT_TRACE_PERFORMANCE=2 GIT_TRACE_PACK_ACCESS=2 GIT_TRACE_PACKET=2 GIT_TRACE_PACKFILE=2 GIT_TRACE_SETUP=2 GIT_TRACE_SHALLOW=2 git"
 
@@ -307,10 +352,13 @@
 
     # Merge aliases
     # =============
-    mne   = merge --no-edit
-    mff   = merge --ff-only
-    mrp   = merge --strategy-option=patience
-    plr   = pull --rebase
+    m-ne = merge --no-edit
+    m-ff = merge --ff-only
+    m-p  = merge --strategy-option=patience
+    m-sq = merge --squash
+
+    # Pull and rebase
+    p-r   = pull --rebase
 
     ##
     # make Branch A resolve conflicts to branch b
@@ -506,7 +554,9 @@
         f(){ \
             current_branch=$(git currentbranch); \
             tag_name=\"release/$(date +%F)\"; \
+            echo ${tag_name}; \
             git tag ${tag_name}; \
+            echo ${tag_name}; \
             git push origin ${tag_name} ${current_branch}; \
         }; f"
 
@@ -622,3 +672,5 @@
     renormalize = true
 	tool = vimdiff
 	conflictstyle = diff3
+[pull]
+	ff = only
