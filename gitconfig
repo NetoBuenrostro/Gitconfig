@@ -35,28 +35,35 @@
     cim    = !git ci -m
     ci-msg = commit --allow-empty -m
 
+    credit = blame
+
     # Diff commands
     # =============
-    dfchk = diff --check                # Check for errors combined with core.whitespace (space, tab ... )
-    dc    = diff --cached --histogram
-    dc-p  = !git --no-pager dc          # Show cached diff without using a pager
-    ds    = diff --staged --histogram
-    df    = diff --histogram
-    dfw   = diff --word-diff            # Shows the diff only showing the changed words
+    d-chk = diff --check                # Check for errors combined with core.whitespace (space, tab ... )
+    d-ch  = diff --cached --histogram
+    d-cnp = !git --no-pager d-ch          # Show cached diff without using a pager
+    d-sh    = diff --staged --histogram
+    d-h    = diff --histogram
     dfnp  = !git --no-pager diff        # Shows the diff without using a pager
-    dfnb  = !git diff --word-diff-regex=[^[:space:]] # Show the diff ignoring white space or new lines
+    y     = diff "@{yesterday}"
     # Using external tools
     dftool= difftool                    # Default tool
     dfp4  = difftool --tool=p4merge     # launch diff with p4merge
     dfvim = difftool --tool=vimdiff     # launch diff with vimdiff
     mtool-meld = mergetool --tool=meld
+    # 
     w     = whatchanged
-    wdiff = diff --word-diff=plain
-    y     = diff "@{yesterday}"
+    # Word diff
+    d-w   = diff --word-diff            # Shows the diff only showing the changed words
+    d-w-plain  = diff --word-diff=plain
+    d-w-plus   = diff --word-diff --word-diff-regex='\\w+'
+    d-w-nbreaks  = !git diff --word-diff-regex=[^[:space:]] # Show the diff ignoring white space or new lines
 
+    # Status commands
     st     = status -sb
     st-all = status -sb -uall
     st-u   = diff --name-status --diff-filter=U
+    st-uno = status -uno
 
     # Remove files from the repository, but not from my current directory
     rmc   = rm --cached
@@ -211,8 +218,11 @@
     ## Get information from the local branches
     # branch = !git --no-pager branch # Using core.pager 'less -+F -+X' so less will not paginate less than a page
     br    = branch --verbose
+    br-c  = branch --verbose --sort=-committerdate --format='%(authordate:short) %(color:red)%(objectname:short) %(HEAD)%(color:yellow)%(refname:short) %(color:magenta)%(authorname) %(color:bold green)(%(committerdate:relative))%(color:reset)' --color=always
     bra   = branch --all
+    bra-c = branch --all --sort=-committerdate --format='%(authordate:short) %(color:red)%(objectname:short) %(HEAD)%(color:yellow)%(refname:short) %(color:magenta)%(authorname) %(color:bold green)(%(committerdate:relative))%(color:reset)' --color=always
     brr   = branch --remotes
+    brr-c = branch --remotes --sort=-committerdate --format='%(authordate:short) %(color:red)%(objectname:short) %(HEAD)%(color:yellow)%(refname:short) %(color:magenta)%(authorname) %(color:bold green)(%(committerdate:relative))%(color:reset)' --color=always
     br-merged = branch --merged # list merged branches
     ## Get information from the remote repositories
     re    = remote -v
@@ -642,11 +652,11 @@
     smudge = git-lfs smudge %f
     required = true
 [difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+    path = 
 [mergetool "sourcetree"]
-	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+    cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+    trustExitCode = true
 
 ##
 # Useful filters
@@ -670,7 +680,7 @@
 
 [merge]
     renormalize = true
-	tool = vimdiff
-	conflictstyle = diff3
+    tool = vimdiff
+    conflictstyle = diff3
 [pull]
-	ff = only
+    ff = only
