@@ -467,15 +467,52 @@
 
 
     # List branches tracking remote branches
-    br-tracking     = "!git for-each-ref --format='%(refname:short)' refs/heads/* | while read LOCALBRANCH; do if ORIGIN=$(git config --get branch.$LOCALBRANCH.remote); then REMOTEBRANCH=$(git config --get branch.$LOCALBRANCH.merge); echo \"$LOCALBRANCH  ->  $ORIGIN/${REMOTEBRANCH##*/}\"; fi; done"
-    # List branches not tracking remote branches
-    br-no-tracking  = "!git for-each-ref --format='%(refname:short)' refs/heads/* | while read LOCALBRANCH; do if ! [ $(git config --get branch.$LOCALBRANCH.remote) ]; then echo \"$LOCALBRANCH\"; fi; done"
-    # Interactively removes local branches that are not tracking remote branch
-    prune-me = "!git br-no-tracking | while read -r LINE; do printf \"\nDo you want to prune %s? [y/n]\n\" \"$LINE\"; read CONFIRM </dev/tty; case "$CONFIRM" in [yY]) printf \"\nPruning '%s' from local repository ...\n\" \"$LINE\"; git branch -D \"$LINE\";; *) printf \"Skiping %s \n\n\" \"$LINE\";; esac done;"
+    br-tracking     = "! \
+        set -e; \
+        set -u; \
+        f() { \
+            git for-each-ref --format='%(refname:short)' refs/heads/* | while read LOCALBRANCH; do \
+                if ORIGIN=$(git config --get branch.$LOCALBRANCH.remote); then \
+                    REMOTEBRANCH=$(git config --get branch.$LOCALBRANCH.merge); \
+                    echo \"$LOCALBRANCH  ->  $ORIGIN/${REMOTEBRANCH##*/}\"; \
+                fi; \
+            done; \
+        }; \
+    f"
 
+    # List branches not tracking remote branches
+    br-no-tracking  = "! \
+        set -e; \
+        set -u; \
+        f() { \
+            git for-each-ref --format='%(refname:short)' refs/heads/* | while read LOCALBRANCH; do \
+                if ! [ $(git config --get branch.$LOCALBRANCH.remote) ]; then \
+                    echo \"$LOCALBRANCH\"; \
+                fi; \
+            done; \
+        }; \
+    f"
+    # Interactively removes local branches that are not tracking any remote branch
+    prune-me = "! \
+        set -e; \
+        set -u; \
+        f() { \
+            git br-no-tracking | while read -r LINE; do \
+                printf \"\nDo you want to prune %s? [y/n]\n\" \"$LINE\"; \
+                read CONFIRM </dev/tty; \
+                case \"$CONFIRM\" in \
+                    [yY]) \
+                        printf \"\nPruning '%s' from local repository ...\n\" \"$LINE\"; \
+                        git branch -D \"$LINE\" \
+                    ;; \
+                    *) printf \"Skiping %s \n\n\" \"$LINE\" ;; \
+                esac; \
+            done; \
+        }; \
+    f"
 
     # Show my commits only
-    log-me      = !git config user.email | xargs -I{} git lolc --author={}
+    log-me      = !git lolc --author=\"$(git config user.email)\"
 
     # Show commit information
     cinfo = show --pretty=fuller --quiet
@@ -570,14 +607,14 @@
     # ==================================================================
     killspace    = !git stripspace <
     killcomments = !git stripspace --strip-comments <
-    addcomments = !git stripspace --comment-lines <
+    addcomments  = !git stripspace --comment-lines <
 
     # Utils
     # ==================================================================
     # Pack the repository and run, this can be used even on a not git repository
     panic       = !tar cvf ../git_panic.tar *
     # Get the repository size
-    repo-size   = !git count-objects -v -H | grep -P -o '(?<=size: ).*'
+    repo-size   = !git count-objects -v --human-readable | grep -P -o '(?<=size: ).*'
     # Git-doc: Commit everything as a new version
     doc = !git add -A && git cim 'Doc: Updating' 
     wipe = "!git add -u && git cim \"WIP - $(git currentbranch)\""
@@ -604,7 +641,6 @@
             git tag ${tag_name}; \
             git push origin ${tag_name} ${current_branch}; \
         }; f"
-
 
 [color]
     ui          = auto
